@@ -1,9 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.LowLevel;
 
 [RequireComponent(typeof(Collider2D))]
 public class PlayerController2D : MonoBehaviour
 {
     public Player player;
+    public PlayerOxygen playerOxygen;
+    public PlayerFood playerFood;
 
     #region ======== 可视化参数 ========
     [Header("基础移动参数")]
@@ -33,9 +37,9 @@ public class PlayerController2D : MonoBehaviour
 
     [Header("氧气相关")]
     [Tooltip("玩家氧气上限")]
-    public float maxOxygen = 100f;
-    [Tooltip("玩家当前氧气")]
-    public float currentOxygen = 100f;
+    public int maxOxygen = 100;
+    //[Tooltip("玩家当前氧气")]
+    //public float currentOxygen = 100f;
     [Tooltip("玩家基础耗氧速率(每秒)")]
     public float oxygenConsumptionRate = 1f;
     [Tooltip("当玩家氧气不足时的扣血速率（每秒），会根据时间或其他条件逐渐提升，可在Update中动态修改")]
@@ -49,9 +53,9 @@ public class PlayerController2D : MonoBehaviour
 
     [Header("饱食度相关")]
     [Tooltip("玩家饱食度上限")]
-    public float maxFullness = 100f;
-    [Tooltip("玩家当前饱食度")]
-    public float currentFullness = 100f;
+    public int maxFullness = 100;
+    //[Tooltip("玩家当前饱食度")]
+    //public float currentFullness = 100f;
     [Tooltip("玩家基础饱食度消耗速率(每秒)")]
     public float fullnessConsumptionRate = 1f;
     [Tooltip("玩家饱食度不足时扣血速率（每秒）")]
@@ -87,13 +91,19 @@ public class PlayerController2D : MonoBehaviour
     #region ======== Unity函数 ========
     private void Start()
     {
-        player._playerHealth.SetMaxHp(maxHealth);
+        player.playerHealth.SetMaxHp(maxHealth);
+        player.playerHealth.SetCurrentHp(maxHealth);
+
+        playerOxygen.SetMaxHp(maxOxygen);
+        playerOxygen.SetCurrentHp(maxOxygen);
+
+        playerFood.SetMaxHp(maxFullness);
+        playerFood.SetCurrentHp(maxFullness);
+
         // 如果没有指定Animator，你可以在此自动获取
         if (!animator) animator = GetComponent<Animator>();
 
-        // 可以在此初始化数值
-        currentOxygen = maxOxygen;
-        currentFullness = maxFullness;
+        InvokeRepeating("HandlePeriodicUpdates", 0f, 1);
     }
 
     private void Update()
@@ -106,17 +116,21 @@ public class PlayerController2D : MonoBehaviour
         HandleNetBuild();
         HandleGrab();
 
-        // =========== 处理数值消耗与恢复 ===========
-        HandleOxygenConsumption();
-        HandleFullnessConsumption();
-        HandleHealthRecoveryAndDrain();
-
         // =========== 处理动画状态机参数 ===========
         UpdateAnimatorParameters();
     }
 
+    private void HandlePeriodicUpdates()
+    {
+        // =========== 处理数值消耗与恢复 ===========
+        HandleOxygenConsumption();
+        HandleFullnessConsumption();
+        HandleHealthRecoveryAndDrain();
+    }
+
     private void FixedUpdate()
     {
+        Flip();
         // 将我们的currentVelocity应用到玩家Transform上（非物理）
         transform.Translate(currentVelocity * Time.fixedDeltaTime);
     }
@@ -137,7 +151,7 @@ public class PlayerController2D : MonoBehaviour
             // 如果你想用“出水面”来瞬间补满氧气，这里可以直接做处理
             // 或者你可以根据玩家的y坐标判断是否出水面
             // 这里先简单写成：碰到空气就立即补满氧气
-            currentOxygen = maxOxygen;
+            playerOxygen.SetCurrentHp(maxOxygen);
         }
     }
 
@@ -154,6 +168,19 @@ public class PlayerController2D : MonoBehaviour
             // 离开空气
             isInAirRange = false;
             currentAirObject = null;
+        }
+    }
+
+    void Flip()
+    {
+        if (inputDirection.x > 0.1f)
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+
+        if (inputDirection.x < -0.1f)
+        {
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
         }
     }
     #endregion
@@ -182,6 +209,9 @@ public class PlayerController2D : MonoBehaviour
     {
         // 获取当前浮力数据（从“气泡”或者其他系统）
         float currentBuoyancy = 0.2f;
+
+        Vector2 force = Vector2.zero;
+
         //float currentBuoyancy = GetCurrentBubble().GetBuoyancyValue();
         // TODO: 目前假设GetCurrentBubble()永远不返回null，你需要自己处理是否有气泡时才获取浮力，
         //       或者给GetCurrentBubble()一个安全返回值。
@@ -193,32 +223,31 @@ public class PlayerController2D : MonoBehaviour
             if (currentBuoyancy > buoyancyThreshold)
             {
                 // 轻微上浮
-                currentVelocity = Vector2.up * (currentBuoyancy - buoyancyThreshold);
+                force = Vector2.up * (currentBuoyancy - buoyancyThreshold) * player.rb2D.mass;
             }
             else if (currentBuoyancy < -buoyancyThreshold)
             {
                 // 轻微下沉（也可以加 gravityFactor 做更强下沉）
-                currentVelocity = Vector2.down * (Mathf.Abs(currentBuoyancy) - buoyancyThreshold) * gravityFactor;
+                force = Vector2.down * (Mathf.Abs(currentBuoyancy) - buoyancyThreshold) * gravityFactor * rb.mass;
             }
-            else
-            {
-                // 浮力接近平衡，不动
-                currentVelocity = Vector2.zero;
-            }
+            // 如果浮力平衡，不需要额外的力
         }
         else
         {
             // 有输入时，玩家在游动
             // 基础方向
-            Vector2 swimVelocity = inputDirection * moveSpeed;
+            Vector2 swimForce = inputDirection * moveSpeed * player.rb2D.mass;
 
             // 将浮力对游动速度的影响加上去（可正可负）
-            swimVelocity += Vector2.up * currentBuoyancy * buoyancyInfluenceOnSwim;
-            // 再考虑重力
-            swimVelocity += Vector2.down * gravityFactor;
+            swimForce += Vector2.up * currentBuoyancy * buoyancyInfluenceOnSwim * player.rb2D.mass;
 
-            currentVelocity = swimVelocity;
+            // 再考虑重力
+            swimForce += Vector2.down * gravityFactor * player.rb2D.mass;
+
+            force = swimForce;
         }
+
+        player.rb2D.AddForce(force, ForceMode2D.Force);
     }
 
     /// <summary>
@@ -245,14 +274,14 @@ public class PlayerController2D : MonoBehaviour
         if (!isDashing && dashCooldownTimer <= 0 && Input.GetKeyDown(KeyCode.Space))
         {
             // 消耗5%氧气和5%饱食度
-            float oxygenCost = maxOxygen * 0.05f;
-            float fullnessCost = maxFullness * 0.05f;
+            int oxygenCost = (int)(maxOxygen * 0.05f);
+            int fullnessCost = (int)(maxFullness * 0.05f);
 
             // 如果实际氧气或饱食度不够，也可以在此判断能否冲刺
             // TODO: 如果需要可在此加个判断，若不足则不冲刺
-
-            currentOxygen -= oxygenCost;
-            currentFullness -= fullnessCost;
+            Debug.Log(oxygenCost);
+            playerOxygen.Damage(oxygenCost);
+            playerFood.Damage(fullnessCost);
 
             isDashing = true;
             dashTimer = dashDuration;
@@ -278,8 +307,10 @@ public class PlayerController2D : MonoBehaviour
         {
             // 攻击动作
             // 在动画中可以设置一个Trigger来播放攻击动画
-            animator.SetTrigger("Attack");
+            //animator.SetTrigger("Attack");
 
+
+            
             // TODO: 攻击判定、伤害结算等
         }
     }
@@ -294,10 +325,8 @@ public class PlayerController2D : MonoBehaviour
         {
             // 结网/修网动作
             // 消耗饱食度
-            // TODO: 这里可以是一个持续消耗的过程，也可以是一次性消耗
-            float netBuildCost = 0.5f * Time.deltaTime; // 每秒消耗0.5点饱食度（示例）
-            currentFullness -= netBuildCost;
-
+            //int netBuildCost = 1; // 每秒消耗1点饱食度（示例）
+            //playerFood.Damage(netBuildCost);
             // 这里可以考虑动画或特效
             // animator.SetBool("NetBuilding", true);
         }
@@ -319,7 +348,6 @@ public class PlayerController2D : MonoBehaviour
             // - 抓到食物：如果长按则进食
             // - 抓到敌人：对敌人扣血，若敌人死则爆食物
             // - 抓到网/障碍物：可固定自己（待定）
-            // - 快速连续抓取多个物品时，放在“屁股后面的气泡”中（需要你自己实现物品管理）
         }
 
         if (Input.GetKey(KeyCode.Q))
@@ -368,31 +396,54 @@ public class PlayerController2D : MonoBehaviour
         else
         {
             // 没有气泡时正常消耗玩家自己的氧气
-            float consumed = oxygenConsumptionRate * Time.deltaTime;
+            int consumed = (int)(oxygenConsumptionRate);
 
             // TODO: 你可以根据玩家移动速度，决定消耗更多或更少
             // 比如：如果玩家在移动，消耗翻倍
-            if (inputDirection.sqrMagnitude > 0.01f)
-            {
-                consumed *= 1.5f; // 举例：移动时额外+50%
-            }
-
-            currentOxygen -= consumed;
-            currentOxygen = Mathf.Clamp(currentOxygen, 0, maxOxygen);
+            //if (inputDirection.sqrMagnitude > 0.01f)
+            //{
+            //    consumed = (int)(consumed * 1.5f); // 举例：移动时额外+50%
+            //}
+            //Debug.Log(consumed);
+            playerOxygen.Damage(consumed);
         }
 
         // 若玩家氧气耗尽，可在此处理逻辑
-        if (currentOxygen <= 0)
+        if (playerOxygen.current_value <= 0)
         {
             // TODO: 做一些缺氧的处理，比如逐渐加快扣血
             // 也可以加一个计时器来不断提高 lowOxygenHealthDrainRate
         }
 
         // 当玩家浮出水面(如果用碰撞检测方式，这里就不用了；如果用坐标高度判断，可以写在此)
-        // if (transform.position.y >= certainSurfaceHeight)
-        // {
-        //     currentOxygen = maxOxygen;
-        // }
+
+        if (detectAir())
+        {
+            Debug.Log("qucik");
+            playerOxygen.Heal((int)(oxygenConsumptionRate) * 10);
+        }
+    }
+
+    private bool detectAir()
+    {
+        // 定义检测范围
+        Vector2 position = transform.position;
+        float radius = 1.0f;
+
+        // 指定 LayerMask（可同时检测多个 Layer）
+        LayerMask targetLayer = LayerMask.GetMask("Air");
+
+        // 检测范围内的碰撞体
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(position, radius, targetLayer);
+
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Air") || hitCollider.CompareTag("Bubble"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>
@@ -400,16 +451,19 @@ public class PlayerController2D : MonoBehaviour
     /// </summary>
     private void HandleFullnessConsumption()
     {
-        float consumed = fullnessConsumptionRate * Time.deltaTime;
+        int consumed = (int)fullnessConsumptionRate;
         // 同理，移动时可能消耗更多
-        if (inputDirection.sqrMagnitude > 0.01f)
-        {
-            consumed *= 1.5f; // 示例
-        }
-        currentFullness -= consumed;
-        currentFullness = Mathf.Clamp(currentFullness, 0, maxFullness);
-
+        //if (inputDirection.sqrMagnitude > 0.01f)
+        //{
+        //    consumed = (int)(consumed * 1.5f); // 示例
+        //}
+        playerFood.Damage(consumed);
         // TODO: 当玩家捕猎进食时才可恢复饱食度，这部分逻辑可以在HandleGrab中实现
+    }
+
+    private bool isPlayerHealthy()
+    {
+        return (playerOxygen.current_value > (playerOxygen.maxHealth / 2)) && (playerFood.current_value > (playerFood.maxHealth / 2));
     }
 
     /// <summary>
@@ -417,19 +471,22 @@ public class PlayerController2D : MonoBehaviour
     /// </summary>
     private void HandleHealthRecoveryAndDrain()
     {
-        player.playerHealth.Heal((int)(healthRecoveryRate * Time.deltaTime));
-
-        // 如果氧气不足，按一定速率扣血
-        if (currentOxygen <= 0)
+        if (isPlayerHealthy())
         {
-            float damageThisFrame = lowOxygenHealthDrainRate * Time.deltaTime;
+            // TODO 在家里回血速度加倍
+            player.playerHealth.Heal((int)(healthRecoveryRate));
+        }
+        // 如果氧气不足，按一定速率扣血
+        if (playerOxygen.current_value <= 0)
+        {
+            float damageThisFrame = lowOxygenHealthDrainRate;
             TakeDamage(damageThisFrame);
         }
 
         // 如果饱食度不足，也要扣血
-        if (currentFullness <= 0)
+        if (playerFood.current_value <= 0)
         {
-            float damageThisFrame = lowFullnessHealthDrainRate * Time.deltaTime;
+            float damageThisFrame = lowFullnessHealthDrainRate;
             TakeDamage(damageThisFrame);
         }
     }
@@ -458,10 +515,10 @@ public class PlayerController2D : MonoBehaviour
         // 如果有动画需求，可在此传递速度、是否游动、是否冲刺、是否攻击等给Animator
         if (!animator) return;
 
-        // 简单示例： 
-        animator.SetFloat("VelocityX", currentVelocity.x);
-        animator.SetFloat("VelocityY", currentVelocity.y);
-        animator.SetBool("IsSwimming", inputDirection.sqrMagnitude > 0.01f);
+        // 简单示例：
+        animator.SetBool("Running", inputDirection.sqrMagnitude > 0.01f);
+
+        animator.SetBool("Run_Up", inputDirection.y > 0f);
 
         // 你可以添加更多参数或状态机逻辑
     }
