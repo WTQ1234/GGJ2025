@@ -18,7 +18,6 @@ Material:
   - _ENABLEFADESPREAD_ON
   - _ENABLEFADEWITHALPHA_ON
   - _ENABLEGAUSSIANBLUR_ON
-  - _ENABLESINGLETONE_ON
   - _OUTLINEFILLINSIDE_ON
   - _OUTLINEFILLLINES_ON
   - _REFLECTLOCALMIRROR_ON
@@ -90,7 +89,7 @@ Material:
     - _EnableRipple: 0
     - _EnableSaturation: 0
     - _EnableSharpen: 0
-    - _EnableSingleTone: 1
+    - _EnableSingleTone: 0
     - _EnableSnapDistort: 0
     - _EnableSplitTone: 0
     - _EnableStaticNoise: 0

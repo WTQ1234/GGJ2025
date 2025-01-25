@@ -8,6 +8,7 @@ TagManager:
   - Bubble
   - Air
   - CameraShake
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -44,4 +45,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: RareLayer
+    uniqueID: 931648759
+    locked: 0
+  - name: BackGroundLayer
+    uniqueID: 3667182483
+    locked: 0
+  - name: InSceneLayer
+    uniqueID: 808175451
+    locked: 0
+  - name: Ground
+    uniqueID: 2883496679
+    locked: 0
+  - name: FrontLayer
+    uniqueID: 3260895267
     locked: 0

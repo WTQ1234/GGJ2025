@@ -228,7 +228,7 @@ public class PlayerController2D : MonoBehaviour
             else if (currentBuoyancy < -buoyancyThreshold)
             {
                 // 轻微下沉（也可以加 gravityFactor 做更强下沉）
-                force = Vector2.down * (Mathf.Abs(currentBuoyancy) - buoyancyThreshold) * gravityFactor * rb.mass;
+                force = Vector2.down * (Mathf.Abs(currentBuoyancy) - buoyancyThreshold) * gravityFactor * player.rb2D.mass;
             }
             // 如果浮力平衡，不需要额外的力
         }
