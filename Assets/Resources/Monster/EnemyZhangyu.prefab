@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 3291096741016406211}
   - component: {fileID: 6518364169790601446}
   - component: {fileID: 8537620898933037669}
-  - component: {fileID: 6833981787848075918}
-  m_Layer: 10
+  - component: {fileID: 1060137113484004894}
+  - component: {fileID: 3646606856032170384}
+  m_Layer: 0
   m_Name: EnemyZhangyu
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -58,7 +59,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f58bdd492efdf7d41afad90936cd0f96, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,13 +79,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 808175451
   m_SortingLayer: 3
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cd24922c8691f7d45bfbe54479f01a76, type: 3}
+  m_SortingOrder: 5
+  m_Sprite: {fileID: 21300000, guid: a804b07d19bde7f498dbbdedbc2a8b35, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.58, y: 3.59}
+  m_Size: {x: 5.39, y: 3.7}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -100,7 +101,7 @@ Animator:
   m_GameObject: {fileID: 8652599028595837440}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2ce10016bf3b0474e9f2019f90d1a375, type: 2}
+  m_Controller: {fileID: 9100000, guid: d83be5a75cc672649876289e72a62fe6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -143,18 +144,18 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0029307306, y: 0.009747975}
+  m_Offset: {x: -0.24125028, y: -0.14913106}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.88, y: 0.79}
-    newSize: {x: 4.58, y: 3.59}
+    oldSize: {x: 5.39, y: 3.7}
+    newSize: {x: 5.39, y: 3.7}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.73, y: 0.59}
+  m_Size: {x: 4.788652, y: 2.1499095}
   m_EdgeRadius: 0
 --- !u!50 &3291096741016406211
 Rigidbody2D:
@@ -207,16 +208,21 @@ MonoBehaviour:
   _mobAbilityController: {fileID: 0}
   ShowFollowUI: 0
   followUI: {fileID: 0}
+  isDied: 0
+  lastRespawnPoint: {fileID: 0}
   health: 20
   maxHealth: 20
-  flashTime: 0
+  flashTime: 0.3
   bloodEffect: {fileID: 100000, guid: bc98890f6028f444eaa7789bde5e2eeb, type: 3}
   dropCoin: {fileID: 0}
   floatPoint: {fileID: 5436972558478801286, guid: 5eee6bcf458ed4e43b032934616f40d5, type: 3}
+  sr: {fileID: 0}
   CoinItem: {fileID: 5570677973679823885, guid: ec894a40e932d4949aef9ed359a7b0a9, type: 3}
   powerName: Bubble_Zhangyu
   foodPower: 30
   purePower: 1
+  sprite: {fileID: 21300000, guid: c14293b48b733d64595b47ffdd6b51e0, type: 3}
+  scaleFactor: 1
 --- !u!114 &8537620898933037669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +238,7 @@ MonoBehaviour:
   Owner: {fileID: 6518364169790601446}
   destroy_self: 0
   damage: 3
---- !u!114 &6833981787848075918
+--- !u!114 &1060137113484004894
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,23 +252,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startWhenEnabled: 1
   asynchronousLoad: 0
-  pauseWhenDisabled: 1
+  pauseWhenDisabled: 0
   restartWhenComplete: 1
   logTaskChanges: 0
   group: 0
   resetValuesOnRestart: 0
-  externalBehavior: {fileID: 0}
+  externalBehavior: {fileID: 11400000, guid: 19820468fde990e47b3515a1408cd1c2, type: 2}
   mBehaviorSource:
-    behaviorName: Enemy_Simple_Follow
-    behaviorDescription: "\u8DDF\u968F\u73A9\u5BB6\uFF0C\u901F\u5EA6\u7531EnemyFollowPlayer\u8282\u70B9\u51B3\u5B9A"
+    behaviorName: Behavior
+    behaviorDescription: 
     mTaskData:
       types: []
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(324.8333,30)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-1.57922363,98.1093)"},"ID":1,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"InitTarget_Player","NodeData":{"Offset":"(-98.85196,104.0184)"},"ID":2,"Name":"Init
-        Target   Player","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}},{"Type":"FollowTarget","NodeData":{"Offset":"(105.9091,105.9091)"},"ID":3,"Name":"Follow
-        Target","Instant":true,"Singlespeed":2,"Singlebreak_distance":0,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}]}'
+      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -274,3 +278,17 @@ MonoBehaviour:
       Version: 1.7.4
   gizmoViewMode: 2
   showBehaviorDesignerGizmo: 1
+--- !u!114 &3646606856032170384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8652599028595837440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db823a5e5e75e3145b96019dc60f0a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Owner: {fileID: 0}
+  teamId: 2

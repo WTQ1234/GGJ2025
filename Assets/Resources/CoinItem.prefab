@@ -175,6 +175,9 @@ MonoBehaviour:
   speed: 5
   value: 5
   isCollected: 0
+  extraValue: 0
+  extraName: 
+  spriteRenderer: {fileID: 4623539806681552017}
 --- !u!95 &1320852671
 Animator:
   serializedVersion: 5

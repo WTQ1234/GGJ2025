@@ -20,6 +20,8 @@ public class PlayerBubbleController : MonoBehaviour
     [ShowInInspector]
     public Dictionary<string, Image> dic_ui = new Dictionary<string, Image>();
 
+    //public static string cur_bubble_name;
+
     public void Awake()
     {
         foreach (Transform child in BubbleParent.transform)
@@ -32,16 +34,17 @@ public class PlayerBubbleController : MonoBehaviour
             }
             else
             {
-                dic_Trans.Add(child.name, 0);
+                dic_Trans.Add(child.name, 1);
             }
 
-            var uicomp = UIComp_AbilityChoose.transform.Find(child.name);
+            var uicomp = UIComp_AbilityChoose.transform.Find(child.name).Find(child.name);
             //Debug.Log(uicomp);
             //Debug.Log(child.name);
             dic_ui.Add(child.name, uicomp.GetComponent<Image>());
             uicomp.GetComponent<Button>().onClick.AddListener(() => TrnsTo(child.name));
         }
         RefreshBubblePower();
+        TrnsTo("Bubble_Default");
     }
 
     // 
@@ -104,10 +107,12 @@ public class PlayerBubbleController : MonoBehaviour
                     foreach (Transform child in BubbleParent.transform)
                     {
                         child.gameObject.SetActive(false);
-                        player.abilityController.UnRegisterMobAbility(dic_Ability[name]);
+                        //player.abilityController.UnRegisterMobAbility(dic_Ability[name]);
                     }
                     trans.gameObject.SetActive(true);
-                    player.abilityController.RegisterMobAbility(dic_Ability[name]);
+                    //player.abilityController.RegisterMobAbility(dic_Ability[name]);
+                    GlobalVarManager.cur_bubble_name = name;
+                    //cur_bubble_name = name;
                 }
             }
         }

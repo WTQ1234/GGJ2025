@@ -94,6 +94,7 @@ public class PlayerController2D : MonoBehaviour
         playerOxygen.SetMaxHp(maxOxygen);
         playerOxygen.SetCurrentHp(maxOxygen);
 
+        bubbleData.currentGas = bubbleData.maxGas;
         playerFood.SetMaxHp((int)bubbleData.maxGas);
         playerFood.SetCurrentHp((int)bubbleData.maxGas);
     }
@@ -213,9 +214,9 @@ public class PlayerController2D : MonoBehaviour
         }
         else if (collision.CompareTag("Base"))
         {
-            // TODO 基地的描边效果显示
             isTouchBase = true;
             sceneEntity_Base = collision.GetComponent<SceneEntity_Base>();
+            sceneEntity_Base.GetComponent<SpriteRenderer>().material.SetFloat("_Thickness", 0.01f);
         }
     }
 
@@ -240,7 +241,7 @@ public class PlayerController2D : MonoBehaviour
         }
         else if (collision.CompareTag("Base"))
         {
-            // TODO 基地的描边效果隐藏
+            sceneEntity_Base.GetComponent<SpriteRenderer>().material.SetFloat("_Thickness", 0f);
             isTouchBase = false;
             sceneEntity_Base = null;
         }
@@ -270,7 +271,7 @@ public class PlayerController2D : MonoBehaviour
     void OnEnterAir()
     {
         float neededGas = bubbleData.maxGas - bubbleData.currentGas;
-        Debug.Log(neededGas);
+        //Debug.Log(neededGas);
         if (neededGas <= 0)
         {
             // 玩家已经满了，不做任何操作
@@ -382,6 +383,11 @@ public class PlayerController2D : MonoBehaviour
 
         force += swimForce;
 
+        if (GlobalVarManager.cur_bubble_name == "Bubble_Fish")
+        {
+            force = swimForce * 1.4f;
+        }
+
         player.rb2D.AddForce(force, ForceMode2D.Force);
     }
 
@@ -390,6 +396,11 @@ public class PlayerController2D : MonoBehaviour
     /// </summary>
     private void HandleDash()
     {
+        if (GlobalVarManager.cur_bubble_name == "Bubble_Zhangyu")
+        {
+            return;
+        }
+
         if (dashCooldownTimer > 0)
         {
             dashCooldownTimer -= Time.deltaTime;
@@ -619,7 +630,6 @@ public class PlayerController2D : MonoBehaviour
     {
         if (isPlayerHealthy())
         {
-            // TODO 在家里回血速度加倍
             if (isTouchHome)
             {
                 player.playerHealth.Heal((int)(healthRecoveryRate) * 2);
@@ -664,7 +674,7 @@ public class PlayerController2D : MonoBehaviour
         if (!animator) return;
 
         // 简单示例：
-        animator.SetBool("Running", inputDirection.sqrMagnitude > 0.01f);
+        animator.SetBool("Running", (Mathf.Abs(inputDirection.y) > 0.2f) && (inputDirection.sqrMagnitude > 0.01f));
 
         animator.SetBool("Run_Up", inputDirection.y > 0f);
 

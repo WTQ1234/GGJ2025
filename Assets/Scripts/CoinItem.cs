@@ -11,6 +11,8 @@ public class CoinItem : MonoBehaviour
     public float extraValue;
     public string extraName;
 
+    public SpriteRenderer spriteRenderer;
+
     public void Collect()
     {
         isCollected = true;

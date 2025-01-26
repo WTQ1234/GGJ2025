@@ -14,15 +14,16 @@ GameObject:
   - component: {fileID: 1959655309632682630}
   - component: {fileID: 5857398484255984337}
   - component: {fileID: 5874540689748629219}
-  - component: {fileID: 8026250025234773730}
   - component: {fileID: 1088295111796374329}
-  m_Layer: 10
+  - component: {fileID: 3003059781751560333}
+  - component: {fileID: 383568246129171491}
+  m_Layer: 0
   m_Name: EnemyFish_Sprint
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1959655309632682628
 Transform:
   m_ObjectHideFlags: 0
@@ -58,7 +59,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f58bdd492efdf7d41afad90936cd0f96, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,13 +79,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 808175451
   m_SortingLayer: 3
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 215b554d2f950a043b6a6ab31b05b3f2, type: 3}
+  m_SortingOrder: 5
+  m_Sprite: {fileID: 21300000, guid: e1de8b098deed85428c8044926ed5975, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.72, y: 0.8}
+  m_Size: {x: 5.36, y: 2.95}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -146,9 +147,9 @@ BoxCollider2D:
   m_Offset: {x: 0.028544188, y: -0.03262204}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.72, y: 0.8}
-    newSize: {x: 1.72, y: 0.8}
+    pivot: {x: 0.18520525, y: 0.8732218}
+    oldSize: {x: 7.3, y: 4.25}
+    newSize: {x: 5.36, y: 2.95}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -164,14 +165,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1959655309632682633}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
-  m_GravityScale: 0.1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -198,52 +199,6 @@ MonoBehaviour:
   Owner: {fileID: 1088295111796374329}
   destroy_self: 0
   damage: 2
---- !u!114 &8026250025234773730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959655309632682633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d7b55c7ecdb49a4a89fa5e6f9022861, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startWhenEnabled: 1
-  asynchronousLoad: 0
-  pauseWhenDisabled: 1
-  restartWhenComplete: 1
-  logTaskChanges: 0
-  group: 0
-  resetValuesOnRestart: 0
-  externalBehavior: {fileID: 0}
-  mBehaviorSource:
-    behaviorName: Enemy_Simple_Sprint
-    behaviorDescription: 
-    mTaskData:
-      types: []
-      parentIndex: 
-      startIndex: 
-      variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(547.1667,30)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-2.83202934,99.58261)"},"ID":1,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-79.5962753,95.71165)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"DetectTarget","NodeData":{"Offset":"(-69.59634,113.453621)"},"ID":3,"Name":"Detect
-        Target","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(55.24253,113.453621)"},"ID":4,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-83.09967,107.18959)"},"ID":5,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"DetectDistanceFromTarget","NodeData":{"Offset":"(-117.9834,118.584892)"},"ID":6,"Name":"Detect
-        Distance From Target","Instant":true,"Singledistance_target":4,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(248.863556,130.121)"},"ID":7,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"PauseMovment","NodeData":{"Offset":"(-95.2650757,147.09108)","WatchedFields":["cur_time"]},"ID":8,"Name":"Pause
-        Movment","Instant":true,"Singlepause_time":0.5,"Singlecur_time":0},{"Type":"BehaviorDesigner.Runtime.Tasks.Cooldown","NodeData":{"Offset":"(124.090851,146.3636)"},"ID":9,"Name":"Cooldown","Instant":true,"SharedFloatduration":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1},"Children":[{"Type":"SprintTarget","NodeData":{"Offset":"(-0.451965332,109.047363)"},"ID":10,"Name":"Sprint
-        Target","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true},"Singlesprint_speed":10}]}]}]},{"Type":"FollowTarget","NodeData":{"Offset":"(63.87713,110.212784)"},"ID":11,"Name":"Follow
-        Target","Instant":true,"Singlespeed":2,"Singlebreak_distance":4,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}}]}]},{"Type":"InitTarget_Player","NodeData":{"Offset":"(93.6296,105.711647)"},"ID":12,"Name":"Init
-        Target   Player","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}]}'
-      fieldSerializationData:
-        typeName: []
-        fieldNameHash: 
-        startIndex: 
-        dataPosition: 
-        unityObjects: []
-        byteData: 
-        byteDataArray: 
-      Version: 1.7.4
-  gizmoViewMode: 2
-  showBehaviorDesignerGizmo: 1
 --- !u!114 &1088295111796374329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,9 +223,72 @@ MonoBehaviour:
   _mobAbilityController: {fileID: 0}
   ShowFollowUI: 0
   followUI: {fileID: 0}
+  isDied: 0
+  lastRespawnPoint: {fileID: 0}
   health: 30
   maxHealth: 30
-  flashTime: 0
-  bloodEffect: {fileID: 0}
+  flashTime: 0.3
+  bloodEffect: {fileID: 100000, guid: bc98890f6028f444eaa7789bde5e2eeb, type: 3}
   dropCoin: {fileID: 0}
-  floatPoint: {fileID: 0}
+  floatPoint: {fileID: 5436972558478801286, guid: 5eee6bcf458ed4e43b032934616f40d5, type: 3}
+  sr: {fileID: 0}
+  CoinItem: {fileID: 5570677973679823885, guid: ec894a40e932d4949aef9ed359a7b0a9, type: 3}
+  powerName: Bubble_Fish
+  foodPower: 5
+  purePower: 0.1
+  sprite: {fileID: 21300000, guid: 592505915e68fb243ab0753913635e04, type: 3}
+  scaleFactor: 0.5
+--- !u!114 &3003059781751560333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959655309632682633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7b55c7ecdb49a4a89fa5e6f9022861, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startWhenEnabled: 1
+  asynchronousLoad: 0
+  pauseWhenDisabled: 0
+  restartWhenComplete: 0
+  logTaskChanges: 0
+  group: 0
+  resetValuesOnRestart: 0
+  externalBehavior: {fileID: 11400000, guid: 0dff6e19262187241a1cadc975bf29a7, type: 2}
+  mBehaviorSource:
+    behaviorName: Behavior
+    behaviorDescription: 
+    mTaskData:
+      types: []
+      parentIndex: 
+      startIndex: 
+      variableStartIndex: 
+      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Target","IsShared":true}]}'
+      fieldSerializationData:
+        typeName: []
+        fieldNameHash: 
+        startIndex: 
+        dataPosition: 
+        unityObjects: []
+        byteData: 
+        byteDataArray: 
+      Version: 1.7.4
+  gizmoViewMode: 2
+  showBehaviorDesignerGizmo: 1
+--- !u!114 &383568246129171491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959655309632682633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db823a5e5e75e3145b96019dc60f0a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Owner: {fileID: 0}
+  teamId: 2

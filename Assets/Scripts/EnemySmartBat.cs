@@ -13,6 +13,9 @@ public class EnemySmartBat : Enemy
     public string powerName;
     public int foodPower;
     public float purePower;
+    public Sprite sprite;
+
+    public float scaleFactor = 1f;
 
     protected override void Start()
     {
@@ -20,23 +23,26 @@ public class EnemySmartBat : Enemy
         sr.material = new Material(sr.sharedMaterial);
     }
 
-    bool isDied = false;
+    bool isDiedNow = false;
     float diedTime = 0f;
     protected override void OnDeath()
     {
         base.OnDeath();
+        if (isDiedNow) {  return; }
         var item = Instantiate<CoinItem>(CoinItem, transform.position, Quaternion.identity);
         item.value = foodPower;
         item.extraName = powerName;
         item.extraValue = purePower;
-        isDied = true;
+        item.spriteRenderer.sprite = sprite;
+        item.transform.localScale *= scaleFactor;
+        isDiedNow = true;
         GetComponent<BehaviorTree>().enabled = false;
     }
 
     protected override void Update()
     {
         base.Update();
-        if (isDied)
+        if (isDiedNow)
         {
             diedTime += Time.deltaTime;
             transform.Translate(0, Time.deltaTime * 0.5f, 0);

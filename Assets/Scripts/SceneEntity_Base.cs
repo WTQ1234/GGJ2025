@@ -7,6 +7,14 @@ public class SceneEntity_Base : MonoBehaviour
     public Transform homeTrans;
     public bool isSetBaseAlready = false;
     public BubbleData bubbleData;
+    public SpriteRenderer spriteRenderer;
+
+    void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.material = new Material(spriteRenderer.sharedMaterial);
+        spriteRenderer.material.SetFloat("_Thickness", 0);
+    }
 
     public void Update()
     {
@@ -21,8 +29,7 @@ public class SceneEntity_Base : MonoBehaviour
         {
             return 0;
         }
-        // TODO 取消掉描边
-
+        spriteRenderer.material.SetFloat("_Thickness", 0);
 
         // 设置一个
         homeTrans.gameObject.SetActive(true);

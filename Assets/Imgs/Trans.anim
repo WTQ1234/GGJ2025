@@ -21,7 +21,7 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 249b68b69f203b64196959274b273356, type: 3}
+      value: {fileID: 21300000, guid: c1d72da403803c248ab49065995c06ed, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -30,9 +30,9 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 4ed519e772aa6c04eb8d6b9985aedb83, type: 3}
+      value: {fileID: 21300000, guid: 6ad5b569d6b1fbd40bda161869a2dd78, type: 3}
     attribute: m_Sprite
-    path: Bubble_Fish
+    path: Pigu
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -53,7 +53,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 100042121
+      path: 2812041410
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -62,8 +62,8 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 249b68b69f203b64196959274b273356, type: 3}
-    - {fileID: 21300000, guid: 4ed519e772aa6c04eb8d6b9985aedb83, type: 3}
+    - {fileID: 21300000, guid: c1d72da403803c248ab49065995c06ed, type: 3}
+    - {fileID: 21300000, guid: 6ad5b569d6b1fbd40bda161869a2dd78, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

@@ -12,6 +12,11 @@ public class HandAttack : MonoBehaviour
 
     public void StartAttackDetect()
     {
+        if (GlobalVarManager.cur_bubble_name != "Bubble_Kedou")
+        {
+            return;
+        }
+        // TODO ²¥·Åµ¶Æø¶¯»­
         collider2d.enabled = true;
     }
 
