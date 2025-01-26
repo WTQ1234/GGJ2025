@@ -9,6 +9,10 @@ TagManager:
   - Air
   - CameraShake
   - Enemy
+  - Coin
+  - Base
+  - Home
+  - Ground
   layers:
   - Default
   - TransparentFX

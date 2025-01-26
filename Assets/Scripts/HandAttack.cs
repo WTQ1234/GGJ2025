@@ -42,6 +42,11 @@ public class HandAttack : MonoBehaviour
                 _CauseDamage(entity);
             }
         }
+        else if (collision.tag == "Enemy")
+        {
+            Enemy enemy = collision.GetComponent<Enemy>();
+            enemy.TakeDamage(5, true, Owner);
+        }
     }
 
     protected void _CauseDamage(Entity target)

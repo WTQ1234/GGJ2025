@@ -5,20 +5,20 @@ using HRL;
 
 public abstract class Enemy : Entity
 {
-    public int health;
-    public int maxHealth;
+    public float health;
+    public float maxHealth;
     public float flashTime;
 
-    private Rigidbody2D self_rigidbody;
+    protected Rigidbody2D self_rigidbody;
 
     public GameObject bloodEffect;
     public GameObject dropCoin;
     public GameObject floatPoint;
 
-    private SpriteRenderer sr; 
+    public SpriteRenderer sr; 
     private Color originalColor;
 
-    public void Start()
+    protected virtual void Start()
     {
         sr = GetComponent<SpriteRenderer>();
         self_rigidbody = GetComponent<Rigidbody2D>();
@@ -40,14 +40,24 @@ public abstract class Enemy : Entity
         _Flip();
     }
 
-    public void TakeDamage(int damage)
+    public override void Damage(float damage = 1, bool knock_back = false, Entity trans_damage_from = null)
+    {
+        base.Damage(damage, knock_back, trans_damage_from);
+        TakeDamage(damage, knock_back, trans_damage_from);
+    }
+
+    public void TakeDamage(float damage, bool knock_back = false, Entity trans_damage_from = null)
     {
         GameObject gb = Instantiate(floatPoint, transform.position, Quaternion.identity) as GameObject;
         gb.transform.GetChild(0).GetComponent<TextMesh>().text = damage.ToString();
         health -= damage;
         FlashColor(flashTime);
-        Instantiate(bloodEffect, transform.position, Quaternion.identity);
+        //Instantiate(bloodEffect, transform.position, Quaternion.identity);
         //GameController.camShake.Shake();
+        if (knock_back)
+        {
+            self_rigidbody.AddForce((trans_damage_from.transform.position - transform.position).normalized * -200);
+        }
 
         if (health <= 0)
         {
@@ -63,11 +73,12 @@ public abstract class Enemy : Entity
         //{
         //    LevelManager.Instance.OnDropExp(transform.position);
         //}
-        bool res = ObjectPoolManager.Instance.ReturnToPool(transform.name, gameObject);
-        if (!res)
-        {
-            Destroy(gameObject);
-        }
+        //bool res = ObjectPoolManager.Instance.ReturnToPool(transform.name, gameObject);
+        Destroy(gameObject, 2f);
+        //if (!res)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
 
     void FlashColor(float time)
@@ -88,12 +99,12 @@ public abstract class Enemy : Entity
             bool plyerHasXAxisSpeed = Mathf.Abs(self_rigidbody.velocity.x) > Mathf.Epsilon;
             if (plyerHasXAxisSpeed)
             {
-                if (self_rigidbody.velocity.x > 0.1f)
+                if (self_rigidbody.velocity.x < -0.1f)
                 {
                     transform.localRotation = Quaternion.Euler(0, 180, 0);
                 }
 
-                if (self_rigidbody.velocity.x < -0.1f)
+                if (self_rigidbody.velocity.x > 0.1f)
                 {
                     transform.localRotation = Quaternion.Euler(0, 0, 0);
                 }
